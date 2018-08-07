@@ -1,0 +1,5 @@
+---
+- name: run preinstall checklist
+  hosts: master:infra:node
+  roles:
+   - preinstall

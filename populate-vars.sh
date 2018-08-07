@@ -1,5 +1,8 @@
 #!/bin/sh
 
+groups=(infra loadbalancer master node support)
+
+
 GUID=`hostname | cut -d"." -f2`
 host_path="lab/hosts"
 nodes=( $(ansible all --list-hosts) ) 
@@ -10,9 +13,30 @@ echo  "bastion.$GUID.example.opentlc.com" >> $host_path
 
 
 
-
+processed=($(for each in ${processed[@]}; do echo $each; done | sort))
+CURR_NODE=''
+HEADER=false
 for i in ${processed[@]}
 do
-  echo "nodes : ${i}"
+  for x in ${groups[@]}
+  do
+   if [[ $i == $x* ]] && [[ $CURR_NODE != $x ]] ;
+   then
+   
+    CURR_NODE=$x
+    HEADER=true
+   fi
+  done
+ 
+ if $HEADER ; 
+ then
+  echo "" >> $host_path
+  echo "[$CURR_NODE]" >> $host_path
+  HEADER=false
+ fi  
+ echo "${i}" >> $host_path
+
+
+  #echo "nodes : ${i}"
 done
 
