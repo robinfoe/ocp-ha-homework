@@ -1,9 +1,3 @@
-infranode1.65de.internal
-infranode2.65de.internal
-master1.65de.internal
-master2.65de.internal
-master3.65de.internal
-node1.65de.internal
-node2.65de.internal
-node3.65de.internal
-node4.65de.internal
+bastion.65de.example.opentlc.com
+loadbalancer1.65de.internal
+support1.65de.internal

@@ -27,6 +27,13 @@ do
     HEADER=true
    fi
   done
+
+ if [[ $i == "support1"* ]] ;
+ then
+  echo "" >> $host_path
+  echo "[nfs]" >> $host_path
+  echo "${i}" >> $host_path
+ fi
  
  if $HEADER ; 
  then
