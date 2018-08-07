@@ -1,5 +1,5 @@
 [bastion]
-bastion.65de.example.opentlc.com
+bastion.65de.internal
 
 [infra]
 infranode1.65de.internal

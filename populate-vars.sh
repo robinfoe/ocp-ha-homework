@@ -9,9 +9,7 @@ nodes=( $(ansible all --list-hosts) )
 processed=${nodes[@]:2}
 
 echo "[bastion]" > $host_path
-echo  "bastion.$GUID.example.opentlc.com" >> $host_path
-
-
+echo  "bastion.$GUID.internal" >> $host_path
 
 processed=($(for each in ${processed[@]}; do echo $each; done | sort))
 CURR_NODE=''

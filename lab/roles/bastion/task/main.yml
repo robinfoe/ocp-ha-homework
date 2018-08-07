@@ -1,0 +1,11 @@
+---
+- name: Install packages and config auth
+  tasks:
+    - name: required packages are present
+      yum:
+        name:
+          - install atomic-openshift-utils
+          - atomic-openshift-clients
+        state: present
+
+

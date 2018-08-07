@@ -1,20 +1,30 @@
 ---
-- name: Prepare GUID environment variable across all hosts
+# - name: Prepare GUID environment variable across all hosts
+#   hosts: all
+#   tasks:
+#     - name: All GUID env variable
+#       shell: export GUID=`hostname | cut -d"." -f2`; echo "export GUID=$GUID" >> $HOME/.bashrc
+
+# - name: Prepare config check on Master, Infra and Worker
+#   hosts: infra:master:node
+#   tasks: 
+#    - name: Make sure Docker is running 
+#      systemd: state=started name=docker enabled=yes
+
+# - name: Verify NFS Shared Volumes on Hosts
+#   hosts: nfs
+#   tasks:
+#    - name: Verify NFS Shared Volumes on Hosts
+#      shell: exportfs
+#      register: efsout
+#      become: yes
+#      failed_when:  not (efsout.stdout.find('/srv/nfs') != -1)
+
+
+
+
+### TO BE IGNORED 
+- name: run preinstall checklist
   hosts: all
-  tasks:
-    - name: All GUID env variable
-      shell: export GUID=`hostname | cut -d"." -f2`; echo "export GUID=$GUID" >> $HOME/.bashrc
-
-- name: Make sure Docker is running
-  hosts: infra:master:node
-  task: 
-   systemd: state=started name=docker enabled=yes
-
-- name: Verify NFS Shared Volumes on Hosts
-  hosts: nfs
-  tasks:
-
-#- name: run preinstall checklist
-#  hosts: all
-#  roles:
-#   - preinstall
+  roles:
+   - preinstall

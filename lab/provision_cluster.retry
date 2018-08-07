@@ -1,3 +1,2 @@
-bastion.65de.example.opentlc.com
-loadbalancer1.65de.internal
-support1.65de.internal
+infranode1.65de.internal
+infranode2.65de.internal
