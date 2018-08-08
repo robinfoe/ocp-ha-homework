@@ -1,9 +1,0 @@
----
-- name: Make sure Docker is running
-  hosts: infra:master:node
-  systemd: state=started name=docker enabled=yes
-
-#- name: Make sure Docker is running on the right version 
-#  shell: docker version|grep Version
-
-

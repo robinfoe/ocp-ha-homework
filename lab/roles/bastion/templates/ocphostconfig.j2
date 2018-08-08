@@ -207,7 +207,7 @@ nfs
 
 ## These are infranodes
 {% for item in param.node.infra %}
-{{item.hostname}} openshift_hostname={{item.hostname}} openshift_node_labels="{'env':'infra', 'cluster': '{{ param.cluster.guid }}'}"
+{{item.hostname}}.{{ url_internal_suffix }} openshift_hostname={{item.hostname}}.{{ url_internal_suffix }} openshift_node_labels="{'env':'infra', 'cluster': '{{ param.cluster.guid }}'}"
 {% endfor %}
 
 ## These are regular nodes
