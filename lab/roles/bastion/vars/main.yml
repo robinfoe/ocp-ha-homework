@@ -1,0 +1,25 @@
+---
+param:
+ cluster:
+  guid: 65de
+  public_dns_suffix: example.opentlc.com
+  private_dns_suffix: internal
+  public_hostname: loadbalancer1
+  app_hostname: apps
+  
+ node:
+  masters:
+    - hostname: master1
+    - hostname: master2
+    - hostname: master3
+  infra:
+    - hostname: infranode1
+    - hostname: infranode2
+  workernode:
+    - hostname: node1
+    - hostname: node2
+    - hostname: node3
+    - hostname: node4
+  storage: support1
+  loadbalancer: loadbalancer1
+

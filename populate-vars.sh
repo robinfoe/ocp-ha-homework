@@ -40,8 +40,5 @@ do
   HEADER=false
  fi  
  echo "${i}" >> $host_path
-
-
   #echo "nodes : ${i}"
 done
-

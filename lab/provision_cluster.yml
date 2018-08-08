@@ -20,11 +20,14 @@
 #      become: yes
 #      failed_when:  not (efsout.stdout.find('/srv/nfs') != -1)
 
-
-
-
-### TO BE IGNORED 
-- name: run preinstall checklist
-  hosts: all
+- name: Bastion Task
+  hosts: localhost
+  become: yes
   roles:
-   - preinstall
+   - bastion
+  
+### TO BE IGNORED 
+# - name: run preinstall checklist
+#   hosts: all
+#   roles:
+#    - preinstall
