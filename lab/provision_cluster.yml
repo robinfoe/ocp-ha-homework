@@ -5,17 +5,28 @@
 # - name:  Execute the openshift-ansible Deployer
 #   import_playbook: /usr/share/ansible/openshift-ansible/playbooks/deploy_cluster.yml
 
-- name: Verify OpenShift Cluster
-  hosts: masters[0]
-  tasks:
-    - name: fetch files from master node
-      fetch:
-       src: /root/.kube/config 
-       dest: /root/.kube/config
-       flat: yes
+# - name: Verify OpenShift Cluster
+#   hosts: masters[0]
+#   tasks:
+#     - name: fetch files from master node
+#       fetch:
+#        src: /root/.kube/config 
+#        dest: /root/.kube/config
+#        flat: yes
+
+# - name: Post installation configuration
+#   hosts: localhost
+#   tasks:
+#     - name: make sure you are system:dmin
+#       shell: oc whoami | grep system:admin
 
 - name: Post installation configuration
-  hosts: localhost
+  hosts: nfs
+  become: yes
   tasks:
-    - name: make sure you are system:dmin
-      shell: oc whoami | grep system:admin
+   - name: create pvs 
+   - script: pv-create.sh
+
+
+   -- TODO :: add restart nfs
+
