@@ -1,6 +1,21 @@
 ---
-- name: Execute the openshift-ansible prerequisites
-  import_playbook: /usr/share/ansible/openshift-ansible/playbooks/prerequisites.yml
+# - name: Execute the openshift-ansible prerequisites
+#   import_playbook: /usr/share/ansible/openshift-ansible/playbooks/prerequisites.yml
 
-- name:  Execute the openshift-ansible Deployer
-  import_playbook: /usr/share/ansible/openshift-ansible/playbooks/deploy_cluster.yml
+# - name:  Execute the openshift-ansible Deployer
+#   import_playbook: /usr/share/ansible/openshift-ansible/playbooks/deploy_cluster.yml
+
+- name: Verify OpenShift Cluster
+  hosts: masters[0]
+  tasks:
+    - name: fetch files from master node
+      fetch:
+       src: /root/.kube/config 
+       dest: /root/.kube/config
+       flat: yes
+
+- name: Post installation configuration
+  hosts: localhost
+  tasks:
+    - name: make sure you are system:dmin
+      shell: oc whoami | grep system:admin
