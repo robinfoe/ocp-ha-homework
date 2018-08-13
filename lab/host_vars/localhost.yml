@@ -1,5 +1,6 @@
 ---
-ocp_template_dir: /home/rfoe-redhat.com/ocp-ha-homework/lab/ocp_template
+ocp_template_dir: "{{ playbook_dir }}/ocp_template"
+app_test_url: http://nodejs-mongo-persistent-smoke-test.apps.65de.example.opentlc.com
 pv_template:
   nfs_node: support1.65de.internal
   rwo:
@@ -18,14 +19,19 @@ applier:
    - object: PersistentVolume
      content:
       - name: PV creations for user
-        file: /home/rfoe-redhat.com/ocp-ha-homework/lab/ocp_template/pvs/
+        file: "{{ playbook_dir }}/ocp_template/pvs/"
 
   smoketest:
    - object: projectRequest
      content:
       - name: smoke-test
-        file: /home/rfoe-redhat.com/ocp-ha-homework/lab/ocp_template/smoketest/projectreq.yml
-        action: create
-     post-steps:
-      - role: /home/rfoe-redhat.com/ocp-ha-homework/lab/roles/smoked/tasks/main.yml
-   
+        file: "{{ playbook_dir }}/ocp_template/smoketest/projectreq.yml"
+        file_action: create
+
+   - object: deployment
+     content:
+      - name: smoked-nodejs
+        template: /home/rfoe-redhat.com/ocp-ha-homework/lab/ocp_template/smoketest/template/app-template.yml
+        params: /home/rfoe-redhat.com/ocp-ha-homework/lab/ocp_template/smoketest/param/smoke-param
+     #post-steps:
+     # - role: /home/rfoe-redhat.com/ocp-ha-homework/lab/roles/smoked/tasks/main.yml

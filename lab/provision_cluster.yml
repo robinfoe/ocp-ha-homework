@@ -65,6 +65,7 @@
    - role: openshift-applier
      vars:
       openshift_cluster_content: '{{ applier.smoketest }}'
+   - role: smoked
 
   
    

@@ -1,36 +1,32 @@
 apiVersion: template.openshift.io/v1
 kind: Template
 labels:
-  app: nodejs-mongodb-example
-  template: nodejs-mongodb-example
+  template: nodejs-mongo-persistent
 message: |-
   The following service(s) have been created in your project: ${NAME}, ${DATABASE_SERVICE_NAME}.
 
   For more information about using this template, including OpenShift considerations, see https://github.com/openshift/nodejs-ex/blob/master/README.md.
 metadata:
   annotations:
-    description: |-
-      An example Node.js application with a MongoDB database. For more information about using this template, including OpenShift considerations, see https://github.com/openshift/nodejs-ex/blob/master/README.md.
-
-      WARNING: Any data stored will be lost upon pod destruction. Only use this template for testing.
+    description: An example Node.js application with a MongoDB database. For more
+      information about using this template, including OpenShift considerations, see
+      https://github.com/openshift/nodejs-ex/blob/master/README.md.
     iconClass: icon-nodejs
-    openshift.io/display-name: Node.js + MongoDB (Ephemeral)
+    openshift.io/display-name: Node.js + MongoDB
     openshift.io/documentation-url: https://github.com/openshift/nodejs-ex
     openshift.io/long-description: This template defines resources needed to develop
       a NodeJS application, including a build configuration, application deployment
-      configuration, and database deployment configuration.  The database is stored
-      in non-persistent storage, so this configuration should be used for experimental
-      purposes only.
+      configuration, and database deployment configuration.
     openshift.io/provider-display-name: Red Hat, Inc.
     openshift.io/support-url: https://access.redhat.com
     tags: quickstart,nodejs
     template.openshift.io/bindable: "false"
   creationTimestamp: 2018-08-08T06:38:40Z
-  name: nodejs-mongodb-example
+  name: nodejs-mongo-persistent
   namespace: openshift
-  resourceVersion: "42021"
-  selfLink: /apis/template.openshift.io/v1/namespaces/openshift/templates/nodejs-mongodb-example
-  uid: aff0f824-9ad5-11e8-9a5e-0aea07344c66
+  resourceVersion: "42020"
+  selfLink: /apis/template.openshift.io/v1/namespaces/openshift/templates/nodejs-mongo-persistent
+  uid: afef9785-9ad5-11e8-9a5e-0aea07344c66
 objects:
 - apiVersion: v1
   kind: Secret
@@ -156,7 +152,7 @@ objects:
               port: 8080
             initialDelaySeconds: 30
             timeoutSeconds: 3
-          name: nodejs-mongodb-example
+          name: nodejs-mongo-persistent
           ports:
           - containerPort: 8080
           readinessProbe:
@@ -172,12 +168,22 @@ objects:
     - imageChangeParams:
         automatic: true
         containerNames:
-        - nodejs-mongodb-example
+        - nodejs-mongo-persistent
         from:
           kind: ImageStreamTag
           name: ${NAME}:latest
       type: ImageChange
     - type: ConfigChange
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: ${DATABASE_SERVICE_NAME}
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: ${VOLUME_CAPACITY}
 - apiVersion: v1
   kind: Service
   metadata:
@@ -255,9 +261,9 @@ objects:
           - mountPath: /var/lib/mongodb/data
             name: ${DATABASE_SERVICE_NAME}-data
         volumes:
-        - emptyDir:
-            medium: ""
-          name: ${DATABASE_SERVICE_NAME}-data
+        - name: ${DATABASE_SERVICE_NAME}-data
+          persistentVolumeClaim:
+            claimName: ${DATABASE_SERVICE_NAME}
     triggers:
     - imageChangeParams:
         automatic: true
@@ -274,7 +280,7 @@ parameters:
   displayName: Name
   name: NAME
   required: true
-  value: nodejs-mongodb-example
+  value: nodejs-mongo-persistent
 - description: The OpenShift Namespace where the ImageStream resides.
   displayName: Namespace
   name: NAMESPACE
@@ -290,6 +296,11 @@ parameters:
   name: MEMORY_MONGODB_LIMIT
   required: true
   value: 512Mi
+- description: Volume space available for data, e.g. 512Mi, 2Gi
+  displayName: Volume Capacity
+  name: VOLUME_CAPACITY
+  required: true
+  value: 1Gi
 - description: The URL of the repository with your application source code.
   displayName: Git Repository URL
   name: SOURCE_REPOSITORY_URL
