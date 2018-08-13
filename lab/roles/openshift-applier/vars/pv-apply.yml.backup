@@ -1,0 +1,14 @@
+---
+unsupported_dict_top_level:
+- content_dir
+
+unsupported_dict_content_level:
+- file_action
+- template_action
+
+
+openshift_cluster_content: 
+- object: PVs
+  content:
+  - name: PV creations for user
+    file: {{ ocp_template_dir }}/pvs

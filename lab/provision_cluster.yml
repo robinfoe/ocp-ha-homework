@@ -20,13 +20,44 @@
 #     - name: make sure you are system:dmin
 #       shell: oc whoami | grep system:admin
 
-- name: Post installation configuration
-  hosts: nfs
+# - name: Post installation configuration
+#   hosts: nfs
+#   become: yes
+#   tasks:
+#    - name: create pvs
+#      script: pv-create.sh
+#    - name: issue NFS restart
+#      systemd:
+#       state: restarted
+#       name: nfs-server
+
+# - name: Create PV Template for OCP
+#   hosts: localhost
+#   become: yes
+#   tasks:
+#    - name: create 1 to 25 RWO
+#      script: pv-create-yaml.sh {{ pv_template.nfs_node }} {{ ocp_template_dir }} {{ pv_template.rwo.from }} {{ pv_template.rwo.to }} {{ pv_template.rwo.size }} {{ pv_template.rwo.mode }}
+#    - name: create 26 to 50 RWX
+#      script: pv-create-yaml.sh {{ pv_template.nfs_node }} {{ ocp_template_dir }} {{ pv_template.rwx.from }} {{ pv_template.rwx.to }} {{ pv_template.rwx.size }} {{ pv_template.rwx.mode }} 
+
+# - name: Executing PV Creation
+#   hosts: localhost
+#   become: yes
+#   roles:
+#    - role: openshift-applier
+#      vars:
+#       openshift_cluster_content: '{{ applier.volumes }}'
+ 
+- name: Fix Recycler
+  hosts: nodes
   become: yes
   tasks:
-   - name: create pvs 
-   - script: pv-create.sh
+    - shell: docker pull registry.access.redhat.com/openshift3/ose-recycler:latest
+    - shell: docker tag registry.access.redhat.com/openshift3/ose-recycler:latest registry.access.redhat.com/openshift3/ose-recycler:v3.9.30
 
 
-   -- TODO :: add restart nfs
 
+
+
+  
+   

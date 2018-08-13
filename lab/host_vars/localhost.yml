@@ -1,0 +1,22 @@
+---
+ocp_template_dir: /home/rfoe-redhat.com/ocp-ha-homework/lab/ocp_template
+pv_template:
+  nfs_node: support1.65de.internal
+  rwo:
+    from: 1
+    to: 25
+    size: 5Gi
+    mode: ReadWriteOnce
+  rwx:
+    from: 26
+    to: 50
+    size: 10Gi
+    mode: ReadWriteMany
+
+
+applier:
+  volumes:
+   - object: PersistentVolume
+     content:
+      - name: PV creations for user
+        file: /home/rfoe-redhat.com/ocp-ha-homework/lab/ocp_template/pvs/
