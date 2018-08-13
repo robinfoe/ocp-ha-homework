@@ -58,8 +58,13 @@
 #     - shell: docker tag registry.access.redhat.com/openshift3/ose-recycler:latest registry.access.redhat.com/openshift3/ose-recycler:v3.9.30
 
 
-
-
+- name: Smoke Testing
+  hosts: localhost
+  become: yes
+  roles:
+   - role: openshift-applier
+     vars:
+      openshift_cluster_content: '{{ applier.smoketest }}'
 
   
    

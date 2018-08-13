@@ -13,10 +13,19 @@ pv_template:
     size: 10Gi
     mode: ReadWriteMany
 
-
 applier:
   volumes:
    - object: PersistentVolume
      content:
       - name: PV creations for user
         file: /home/rfoe-redhat.com/ocp-ha-homework/lab/ocp_template/pvs/
+
+  smoketest:
+   - object: projectRequest
+     content:
+      - name: smoke-test
+        file: /home/rfoe-redhat.com/ocp-ha-homework/lab/ocp_template/smoketest/projectreq.yml
+        action: create
+     post-steps:
+      - role: /home/rfoe-redhat.com/ocp-ha-homework/lab/roles/smoked/tasks/main.yml
+   

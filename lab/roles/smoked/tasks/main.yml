@@ -1,0 +1,3 @@
+---
+- name: Create project
+ shell: oc new-app nodejs-mongo-persistent -n smoke-test
