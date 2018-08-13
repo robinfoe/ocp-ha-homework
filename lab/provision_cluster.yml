@@ -19,6 +19,8 @@
 #   tasks:
 #     - name: make sure you are system:dmin
 #       shell: oc whoami | grep system:admin
+#     - name: Set Network Policy
+#       script: migrate-network-policy.sh
 
 # - name: Post installation configuration
 #   hosts: nfs
@@ -48,12 +50,12 @@
 #      vars:
 #       openshift_cluster_content: '{{ applier.volumes }}'
  
-- name: Fix Recycler
-  hosts: nodes
-  become: yes
-  tasks:
-    - shell: docker pull registry.access.redhat.com/openshift3/ose-recycler:latest
-    - shell: docker tag registry.access.redhat.com/openshift3/ose-recycler:latest registry.access.redhat.com/openshift3/ose-recycler:v3.9.30
+# - name: Fix Recycler
+#   hosts: nodes
+#   become: yes
+#   tasks:
+#     - shell: docker pull registry.access.redhat.com/openshift3/ose-recycler:latest
+#     - shell: docker tag registry.access.redhat.com/openshift3/ose-recycler:latest registry.access.redhat.com/openshift3/ose-recycler:v3.9.30
 
 
 
