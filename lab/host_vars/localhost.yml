@@ -1,6 +1,33 @@
 ---
 ocp_template_dir: "{{ playbook_dir }}/ocp_template"
 app_test_url: http://nodejs-mongo-persistent-smoke-test.apps.65de.example.opentlc.com
+
+
+################## USERS ############################
+users:
+ - user:
+    name: amy
+    password: r3dh4t1!
+    group: alpha
+ - user:
+    name: andrew
+    password: r3dh4t1!
+    group: alpha
+ - user:
+    name: brian
+    password: r3dh4t1!
+    group: beta
+ - user:
+    name: betty
+    password: r3dh4t1!
+    group: beta
+ - user:
+    name: admin
+    password: admin
+    group: poweruser
+
+
+########## PV TEMPLATE GENERATION ##################
 pv_template:
   nfs_node: support1.65de.internal
   rwo:
@@ -14,6 +41,9 @@ pv_template:
     size: 10Gi
     mode: ReadWriteMany
 
+
+
+################### Applier for Cluster Content ###########################
 applier:
   volumes:
    - object: PersistentVolume
@@ -31,7 +61,33 @@ applier:
    - object: deployment
      content:
       - name: smoked-nodejs
-        template: /home/rfoe-redhat.com/ocp-ha-homework/lab/ocp_template/smoketest/template/app-template.yml
-        params: /home/rfoe-redhat.com/ocp-ha-homework/lab/ocp_template/smoketest/param/smoke-param
+        template: "{{ playbook_dir }}/ocp_template/smoketest/template/app-template.yml"
+        params: "{{ playbook_dir }}/ocp_template/smoketest/param/smoke-param"
      #post-steps:
      # - role: /home/rfoe-redhat.com/ocp-ha-homework/lab/roles/smoked/tasks/main.yml
+
+  app_pipeline:
+   - object: projects
+     content:
+      - name: "create environments"
+        file: "{{ playbook_dir }}/ocp_template/app_pipeline/template/projects.yml"
+        file_action: create
+   - object: deployments
+     content:
+      - name: "deploy jenkins environment"
+        template: "{{ playbook_dir }}/ocp_template/app_pipeline/template/jenkins-persistent.yml"
+        params: "{{playbook_dir}}/ocp_template/app_pipeline/param/jenkinsparam"
+      - name: "deploy dev environment"
+        template: "{{ playbook_dir }}/ocp_template/app_pipeline/template/deployment.yml"
+        params: "{{playbook_dir}}/ocp_template/app_pipeline/param/deployment-dev"
+      - name: "deply stage environment"
+        template: "{{ playbook_dir }}/ocp_template/app_pipeline/template/deployment.yml"
+        params: "{{playbook_dir}}/ocp_template/app_pipeline/param/deployment-stage"
+      - name: "deply prod environment"
+        template: "{{ playbook_dir }}/ocp_template/app_pipeline/template/deployment.yml"
+        params: "{{playbook_dir}}/ocp_template/app_pipeline/param/deployment-prod"
+   - object: builds
+     content:
+      - name: "deploy build pipeline to dev"
+        template: "{{ playbook_dir }}/ocp_template/app_pipeline/template/build.yml"
+        params: "{{ playbook_dir }}/ocp_template/app_pipeline/param/build-dev"

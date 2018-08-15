@@ -1,0 +1,6 @@
+APPLICATION_NAME=openshift-tasks
+NAMESPACE=task-build
+SOURCE_REPOSITORY_URL=https://github.com/redhat-cop/container-pipelines.git
+SOURCE_REPOSITORY_REF=master
+APPLICATION_SOURCE_REPO=https://github.com/wkulhanek/openshift-tasks
+IMAGE_STREAM_TAG_NAME=jboss-eap71-openshift:1.1

@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: List
+items:
+- kind: ProjectRequest
+  apiVersion: v1
+  metadata:
+    name: task-build
+    creationTimestam: null
+  displayName: openshift-task - Build
+- kind: ProjectRequest
+  apiVersion: v1
+  metadata:
+    name: task-dev
+    creationTimestam: null
+  displayName: openshift-task - Dev
+- kind: ProjectRequest
+  apiVersion: v1
+  metadata:
+    name: task-stage
+    creationTimestam: null
+  displayName: openshift-task - Stage
+- kind: ProjectRequest
+  apiVersion: v1
+  metadata:
+    name: task-prod
+    creationTimestam: null
+  displayName: openshift-task - Prod
