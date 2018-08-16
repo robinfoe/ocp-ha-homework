@@ -86,6 +86,11 @@ applier:
       - name: "deply prod environment"
         template: "{{ playbook_dir }}/ocp_template/app_pipeline/template/deployment.yml"
         params: "{{playbook_dir}}/ocp_template/app_pipeline/param/deployment-prod"
+   - object: hpa
+     content:
+      - name: "Set HPA"
+        template: "{{ playbook_dir }}/ocp_template/app_pipeline/template/hpa.yml"
+        params: "{{ playbook_dir }}/ocp_template/app_pipeline/param/hpa-prod"
    - object: builds
      content:
       - name: "deploy build pipeline to dev"

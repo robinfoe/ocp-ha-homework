@@ -1,0 +1,31 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+labels:
+  app: hpa-teamplate
+  template: hpa-template
+objects:
+- apiVersion: autoscaling/v1
+  kind: HorizontalPodAutoscaler
+  metadata:
+   namespace: ${NAMESPACE}
+   name: ${TARGET_POD}
+  spec:
+   maxReplicas: 5
+   minReplicas: 1
+   scaleTargetRef:
+     apiVersion: apps.openshift.io/v1
+     kind: DeploymentConfig
+     name: ${TARGET_POD}
+   targetCPUUtilizationPercentage: 80
+  status:
+   currentReplicas: 1
+   desiredReplicas: 0
+parameters:
+- description: The Namespace where the Jenkins pod resides.
+  displayName: Project to deploy  
+  name: NAMESPACE
+  value: cicd
+- description: Pod Target.
+  displayName: Pod Target
+  name: TARGET_POD
+  value: openshift-task
