@@ -114,3 +114,9 @@ applier:
       - name: "deploy build pipeline to dev"
         template: "{{ playbook_dir }}/ocp_template/app_pipeline/template/build.yml"
         params: "{{ playbook_dir }}/ocp_template/app_pipeline/param/build-dev"
+
+  proj_template:
+   - object: projectTemplate
+     content:
+      - name: "Apply new Template"
+        file: "{{playbook_dir}}/ocp_template/multitenant/template/project-req-template.yaml"

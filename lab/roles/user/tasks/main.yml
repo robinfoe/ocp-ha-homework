@@ -7,6 +7,8 @@
   with_items: '{{ credentials }}'
   when: "'masters' in group_names"
 
+
+
 # - name: test localhost
 #   shell : echo {{item.user.name}} - {{ item.user.password }} >> sample.txt
 #   with_items: '{{ credentials  }}'

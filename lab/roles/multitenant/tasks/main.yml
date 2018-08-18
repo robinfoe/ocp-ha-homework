@@ -1,2 +1,32 @@
 ---
-- 
+- name: Labelling the nodes
+  command: "oc label node {{item.node.name}} client={{item.node.label}}"
+  with_item: params.multitenant.nodes
+  when: inventory_hostname_short == "localhost"
+
+
+- name: Apply new project template
+  import_role:
+    name: openshift-applier
+  vars:
+    openshift_cluster_content: "{{applier.proj_template}}"
+  when: "inventory_hostname == 'localhost'"
+
+
+- name: Modify master yaml files to reflect latest project template
+  shell: "sed -i -e 's/projectRequestTemplate: \'\'/projectRequestTemplate: \'default\/project-request\'/g' test.yaml"
+  when: "'masters' in group_names"
+
+
+- name: Modify master yaml files to reflect client=common as default node selector
+  # shell: "sed -i -e 's/defaultNodeSelector: env=app/defaultNodeSelector: env=app,client=common'/g' test.yaml"
+  shell: "sed -i -e 's/defaultNodeSelector: env=app/defaultNodeSelector: client=common'/g' test.yaml"
+  when: "'masters' in group_names"
+
+
+
+#TODO :: pod node selector..... 
+#need to create admission files
+
+# systemctl restart atomic-openshift-master
+## configure node selector 
