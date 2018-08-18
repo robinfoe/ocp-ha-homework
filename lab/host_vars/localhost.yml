@@ -120,3 +120,5 @@ applier:
      content:
       - name: "Apply new Template"
         file: "{{playbook_dir}}/ocp_template/multitenant/template/project-req-template.yaml"
+        file_action: create
+        namespaces: default

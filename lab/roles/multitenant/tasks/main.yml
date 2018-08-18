@@ -1,28 +1,50 @@
 ---
-- name: Labelling the nodes
-  command: "oc label node {{item.node.name}} client={{item.node.label}}"
-  with_item: params.multitenant.nodes
+# - name: Labelling the nodes
+#   command: "oc label node {{item.node.name}} client={{item.node.label}} --overwrite"
+#   with_items: '{{params.multitenant.nodes}}'
+#   when: inventory_hostname_short == "localhost"
+
+
+# - name: Labelling the nodes
+#   command: "oc create -f {{playbook_dir}}/ocp_template/multitenant/template/project-req-template.yaml -n default"
+#   when: inventory_hostname_short == "localhost"
+
+
+# - name: Modify master yaml files to reflect latest project template
+#   lineinfile: 
+#    path: /etc/origin/master/master-config.yaml
+#    regexp: "projectRequestTemplate:"
+#    line: "  projectRequestTemplate: 'default/custom-project-request'"
+#   when: "'masters' in group_names"
+
+# - name: Modify master yaml files to reflect latest project template
+#   lineinfile: 
+#    path: /etc/origin/master/master-config.yaml
+#    regexp: "defaultNodeSelector:"
+#    line: "  defaultNodeSelector: 'env=app,client=common'"
+#   when: "'masters' in group_names"
+
+## TODO :: start from here , try to figure out what is going on..... 
+- name: Modify master yaml files to position pod placement by project
+  lineinfile: 
+  #  path: /etc/origin/master/master-config.yaml
+   path: /home/rfoe-redhat.com/test/test2.yaml
+   regexp: "{{item.regex}}"
+   insertafter: "{{item.regex}}"
+   line: "{{item.line}}"
+  with_items: 
+   - {regex: "pluginConfig:", line: "  PodNodeSelector:" }
+  #  - {regex: "PodNodeSelector:", line: "  configuration:" }
+  #  - {regex: "configuration:", line: "  podNodeSelectorPluginConfig:" }
+  #  - {regex: "podNodeSelectorPluginConfig:", line: "  clusterDefaultNodeSelector:" }
+  #  - {regex: "clusterDefaultNodeSelector:", line: "  alpha-corp:client=alpha" }
+  #  - {regex: "alpha-corp:", line: "  beta-corp:client=beta" }
   when: inventory_hostname_short == "localhost"
 
 
-- name: Apply new project template
-  import_role:
-    name: openshift-applier
-  vars:
-    openshift_cluster_content: "{{applier.proj_template}}"
-  when: "inventory_hostname == 'localhost'"
-
-
-- name: Modify master yaml files to reflect latest project template
-  shell: "sed -i -e 's/projectRequestTemplate: \'\'/projectRequestTemplate: \'default\/project-request\'/g' test.yaml"
-  when: "'masters' in group_names"
-
-
-- name: Modify master yaml files to reflect client=common as default node selector
-  # shell: "sed -i -e 's/defaultNodeSelector: env=app/defaultNodeSelector: env=app,client=common'/g' test.yaml"
-  shell: "sed -i -e 's/defaultNodeSelector: env=app/defaultNodeSelector: client=common'/g' test.yaml"
-  when: "'masters' in group_names"
-
+# - name: Restart Openshift Master
+#   command: "systemctl restart atomic-openshift-master-api atomic-openshift-master-controllers"
+#   when: "'masters' in group_names"
 
 
 #TODO :: pod node selector..... 
@@ -30,3 +52,11 @@
 
 # systemctl restart atomic-openshift-master
 ## configure node selector 
+
+
+# - name: Apply new project template
+#   import_role:
+#     name: openshift-applier
+#   vars:
+#     openshift_cluster_content: "{{params.applier.proj_template}}"
+#   when: "inventory_hostname == 'localhost'"

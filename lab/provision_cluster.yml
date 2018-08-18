@@ -1,7 +1,7 @@
 ---
 # - name: Execute the openshift-ansible prerequisites
 #   import_playbook: /usr/share/ansible/openshift-ansible/playbooks/prerequisites.yml
-
+ 
 # - name:  Execute the openshift-ansible Deployer
 #   import_playbook: /usr/share/ansible/openshift-ansible/playbooks/deploy_cluster.yml
 
@@ -92,7 +92,7 @@
   hosts: localhost:masters
   become: yes
   roles:
-   - role: user
+   - role: multitenant
      params: "{{hostvars['localhost']}}"
      
    
