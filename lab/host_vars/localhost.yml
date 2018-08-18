@@ -1,9 +1,27 @@
 ---
+guid: 65de
 ocp_template_dir: "{{ playbook_dir }}/ocp_template"
 app_test_url: http://nodejs-mongo-persistent-smoke-test.apps.65de.example.opentlc.com
 
+########## MULTITENANCY #######################
 
-################## USERS ############################
+multitenant:
+ nodes:
+  - node: 
+     name: node1.{{guid}}.internal
+     label: aplha
+  - node: 
+     name: node2.{{guid}}.internal
+     label: beta
+  - node: 
+     name: node3.{{guid}}.internal
+     label: common
+  - node: 
+     name: node4.{{guid}}.internal
+     label: common
+
+
+## USERS ############################
 users:
  - user:
     name: amy
@@ -27,7 +45,7 @@ users:
     group: poweruser
 
 
-########## PV TEMPLATE GENERATION ##################
+## PV TEMPLATE GENERATION ##################
 pv_template:
   nfs_node: support1.65de.internal
   rwo:
@@ -42,8 +60,8 @@ pv_template:
     mode: ReadWriteMany
 
 
-
-################### Applier for Cluster Content ###########################
+##- APPLIER -###########################################
+## Applier for Cluster Content ###########################
 applier:
   volumes:
    - object: PersistentVolume

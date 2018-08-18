@@ -69,23 +69,22 @@
 #    - role: smoked
 
 
-- name: Deploy Application Pipeline
-  hosts: localhost
-  become: yes
-  roles:
-   - role: openshift-applier
-     vars:
-      openshift_cluster_content: '{{ applier.app_pipeline }}'
-  #  - role: smoked
+# - name: Deploy Application Pipeline
+#   hosts: localhost
+#   become: yes
+#   roles:
+#    - role: openshift-applier
+#      vars:
+#       openshift_cluster_content: '{{ applier.app_pipeline }}'
 
 
 # =============
-# - name: Executing PV Creation
-#   hosts: localhost:masters
-#   become: yes
-#   roles:
-#    - role: user
-#      credentials: "{{hostvars['localhost']['users']}}"
+- name: Create default user
+  hosts: localhost:masters
+  become: yes
+  roles:
+   - role: user
+     credentials: "{{hostvars['localhost']['users']}}"
 # TODO :: add on for role assignment under multitenante
      
    
