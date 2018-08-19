@@ -24,27 +24,37 @@
 #    line: "  defaultNodeSelector: 'env=app,client=common'"
 #   when: "'masters' in group_names"
 
-## TODO :: start from here , try to figure out what is going on..... 
 - name: Modify master yaml files to position pod placement by project
   lineinfile: 
-  #  path: /etc/origin/master/master-config.yaml
-   path: /home/rfoe-redhat.com/test/test2.yaml
-   regexp: "{{item.regex}}"
+   path: /etc/origin/master/master-config.yaml
    insertafter: "{{item.regex}}"
    line: "{{item.line}}"
   with_items: 
-   - {regex: "pluginConfig:", line: "  PodNodeSelector:" }
-  #  - {regex: "PodNodeSelector:", line: "  configuration:" }
-  #  - {regex: "configuration:", line: "  podNodeSelectorPluginConfig:" }
-  #  - {regex: "podNodeSelectorPluginConfig:", line: "  clusterDefaultNodeSelector:" }
-  #  - {regex: "clusterDefaultNodeSelector:", line: "  alpha-corp:client=alpha" }
-  #  - {regex: "alpha-corp:", line: "  beta-corp:client=beta" }
-  when: inventory_hostname_short == "localhost"
+   - {regex: "pluginConfig:", line: "    PodNodeSelector:" }
+   - {regex: "PodNodeSelector:", line: "     configuration:\n      podNodeSelectorPluginConfig:" }
+   - {regex: "podNodeSelectorPluginConfig:", line: "       clusterDefaultNodeSelector: 'env=app,client=common'" }
+   - {regex: "clusterDefaultNodeSelector: 'env=app,client=common'", line: "       corp-alpha: 'env=app,client=alpha'" }
+   - {regex: "corp-alpha: 'env=app,client=alpha'", line: "       corp-beta: 'env=app,client=beta'" }
+  when: "'masters' in group_names"
 
 
-# - name: Restart Openshift Master
-#   command: "systemctl restart atomic-openshift-master-api atomic-openshift-master-controllers"
-#   when: "'masters' in group_names"
+
+- name: Restart Openshift Master
+  command: "systemctl restart atomic-openshift-master-api atomic-openshift-master-controllers"
+  when: "'masters' in group_names"
+
+
+## Create projects 
+# oc adm new-project corp-alpha --node-selector='client=alpha'
+# oc patch namespace corp-alpha -p '{"metadata":{"annotations":{"scheduler.alpha.kubernetes.io/node-selector":"client=alpha"}}}'
+# oc adm groups new corpalpha andrew amy
+# oc adm policy add-role-to-group admin corpalpha -n corp-alpha
+
+
+# oc adm new-project corp-beta --node-selector='client=beta'
+# oc patch namespace corp-beta -p '{"metadata":{"annotations":{"scheduler.alpha.kubernetes.io/node-selector":"client=beta"}}}'
+# oc adm groups new corpalpha bryan betty
+# oc adm policy add-role-to-group admin corpbeta -n corp-beta
 
 
 #TODO :: pod node selector..... 
