@@ -20,10 +20,10 @@ set -o nounset
 set -o pipefail
 
 plugin="$(oc get clusternetwork default --template='{{.pluginName}}')"
-if [[ "${plugin}" != "redhat/openshift-ovs-multitenant" ]]; then
-   echo "Migration script must be run while still running multitenant plugin"
-   exit 1
-fi 
+# if [[ "${plugin}" != "redhat/openshift-ovs-multitenant" ]]; then
+#    echo "Migration script must be run while still running multitenant plugin"
+#    exit 1
+# fi 
 
 function default-deny() {
     oc create --namespace "$1" -f - <<EOF

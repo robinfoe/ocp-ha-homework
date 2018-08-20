@@ -1,8 +1,8 @@
 ---
-- name: "Migrating Network migrate-network-policy"
-  import_tasks: migrate-network-policy.yml
+# - name: "Migrating Network migrate-network-policy"
+  # import_tasks: migrate-network-policy.yml
 
-#- name: "Migrating Network migrate-network-policy"
-#  import_tasks: configure-nfs.yml
-#  vars: 
-#   params: '{{params}}'
+- name: "Migrating Network migrate-network-policy"
+  import_tasks: configure-nfs.yml
+  vars: 
+   params: '{{params}}'

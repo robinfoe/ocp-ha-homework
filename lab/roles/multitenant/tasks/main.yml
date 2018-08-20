@@ -1,21 +1,11 @@
 ---
-
-- name: Generate user in htpasswd
-  htpasswd:
-   path: /etc/origin/master/htpasswd
-   name: '{{item.user.name}}'
-   password: '{{item.user.password}}'
-  with_items: '{{params.users }}'
-  when: "'masters' in group_names"
-
-
 - name: Labelling the nodes
   command: "oc label node {{item.node.name}} client={{item.node.label}} --overwrite"
-  with_items: '{{params.multitenant.nodes}}'
+  with_items: '{{tenantlabels.nodes}}'
   when: inventory_hostname_short == "localhost"
 
 
-- name: Labelling the nodes
+- name: Create new project req template
   command: "oc create -f {{playbook_dir}}/ocp_template/multitenant/template/project-req-template.yaml -n default"
   when: inventory_hostname_short == "localhost"
 
@@ -24,15 +14,8 @@
   lineinfile: 
    path: /etc/origin/master/master-config.yaml
    regexp: "projectRequestTemplate:"
-   line: "  projectRequestTemplate: 'default/custom-project-request'"
+   line: "  projectRequestTemplate: 'default/project-request'"
   when: "'masters' in group_names"
-
-# - name: Modify master yaml files to reflect latest project template
-#   lineinfile: 
-#    path: /etc/origin/master/master-config.yaml
-#    regexp: "defaultNodeSelector:"
-#    line: "  defaultNodeSelector: 'env=app,client=common'"
-#   when: "'masters' in group_names"
 
 - name: Modify master yaml files to position pod placement by project
   lineinfile: 
@@ -54,29 +37,29 @@
   when: "'masters' in group_names"
 
 
-#TODO :: pod node selector..... 
-## Create projects 
-# oc adm new-project corp-alpha --node-selector='client=alpha'
-# oc patch namespace corp-alpha -p '{"metadata":{"annotations":{"scheduler.alpha.kubernetes.io/node-selector":"client=alpha"}}}'
-# oc adm groups new corpalpha andrew amy
-# oc adm policy add-role-to-group admin corpalpha -n corp-alpha
+- name: Generate user in htpasswd
+  htpasswd:
+   path: /etc/origin/master/htpasswd
+   name: '{{item.user.name}}'
+   password: '{{item.user.password}}'
+  with_items: '{{params.users }}'
+  when: "'masters' in group_names"
 
+- name: Create Project for Alpha and Beta
+  command: "{{item}}"
+  with_items:
+   - oc adm new-project corp-alpha --node-selector='client=alpha'
+   - oc patch namespace corp-alpha -p '{"metadata":{"annotations":{"scheduler.alpha.kubernetes.io/node-selector":"client=alpha"}}}'
+   - oc adm new-project corp-beta --node-selector='client=beta'
+   - oc patch namespace corp-beta -p '{"metadata":{"annotations":{"scheduler.alpha.kubernetes.io/node-selector":"client=beta"}}}'
+  when: inventory_hostname_short == "localhost"
 
-# oc adm new-project corp-beta --node-selector='client=beta'
-# oc patch namespace corp-beta -p '{"metadata":{"annotations":{"scheduler.alpha.kubernetes.io/node-selector":"client=beta"}}}'
-# oc adm groups new corpalpha bryan betty
-# oc adm policy add-role-to-group admin corpbeta -n corp-beta
-
-## END 
-
-#need to create admission files
-# systemctl restart atomic-openshift-master
-## configure node selector 
-
-
-# - name: Apply new project template
-#   import_role:
-#     name: openshift-applier
-#   vars:
-#     openshift_cluster_content: "{{params.applier.proj_template}}"
-#   when: "inventory_hostname == 'localhost'"
+- name: Define User role and Group
+  command: "{{item}}"
+  with_items:
+   - "oc adm policy add-cluster-role-to-user cluster-admin admin"
+   - "oc adm groups new corpalpha andrew amy"
+   - "oc adm groups new corpbeta bryan betty"
+   - oc adm policy add-role-to-group admin corpalpha -n corp-alpha
+   - oc adm policy add-role-to-group admin corpbeta -n corp-beta
+  when: inventory_hostname_short == "localhost"

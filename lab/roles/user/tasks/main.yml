@@ -18,3 +18,5 @@
 #   shell : echo "hello" >> sample.txt
 #   when: inventory_hostname_short == "localhost" 
 
+
+

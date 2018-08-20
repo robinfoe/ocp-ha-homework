@@ -1,57 +1,46 @@
 ---
-# - name: Execute the openshift-ansible prerequisites
-#   import_playbook: /usr/share/ansible/openshift-ansible/playbooks/prerequisites.yml
+- name: Execute the openshift-ansible prerequisites
+  import_playbook: /usr/share/ansible/openshift-ansible/playbooks/prerequisites.yml
  
-# - name:  Execute the openshift-ansible Deployer
-#   import_playbook: /usr/share/ansible/openshift-ansible/playbooks/deploy_cluster.yml
+- name:  Execute the openshift-ansible Deployer
+  import_playbook: /usr/share/ansible/openshift-ansible/playbooks/deploy_cluster.yml
 
 
-# - name: Verify OpenShift Cluster
-#   hosts: masters[0]
-#   tasks:
-#     - name: fetch files from master node
-#       fetch:
-#        src: /root/.kube/config 
-#        dest: /root/.kube/config
-#        flat: yes
+- name: Verify OpenShift Cluster
+  hosts: masters[0]
+  tasks:
+    - name: fetch files from master node
+      fetch:
+       src: /root/.kube/config 
+       dest: /root/.kube/config
+       flat: yes
 
 
-#- name: Post Installation
-#  hosts: localhost:all
-#  become: yes
-#  roles:
-#   - role: postinstall
-#     params: "{{hostvars['localhost']}}"
+- name: Post Installation
+  hosts: localhost:all
+  become: yes
+  roles:
+   - role: postinstall
+     params: "{{hostvars['localhost']}}"
 
 
-#- name: Smoke Testing
-#  hosts: localhost
-#  become: yes
-#  roles:
-#   - role: openshift-applier
-#     vars:
-#      openshift_cluster_content: '{{ applier.smoketest }}'
-#   - role: smoked
+- name: Smoke Testing
+  hosts: localhost
+  become: yes
+  roles:
+   - role: openshift-applier
+     vars:
+      openshift_cluster_content: '{{ applier.smoketest }}'
+   - role: smoked
 
 
-#- name: Deploy Application Pipeline
-#  hosts: localhost
-#  become: yes
-#  roles:
-#   - role: openshift-applier
-#     vars:
-#      openshift_cluster_content: '{{ applier.app_pipeline }}'
-
-
-# =============
-# - name: Create default user
-#   hosts: localhost:masters
-#   become: yes
-#   roles:
-#    - role: user
-#      credentials: "{{hostvars['localhost']['users']}}"
-# TODO :: add on for role assignment under multitenante
-
+- name: Deploy Application Pipeline
+  hosts: localhost
+  become: yes
+  roles:
+   - role: openshift-applier
+     vars:
+      openshift_cluster_content: '{{ applier.app_pipeline }}'
 
 - name: Multitenancy
   hosts: localhost:masters
@@ -60,7 +49,4 @@
    - role: multitenant
      vars:     
       params: "{{hostvars['localhost']}}"
-     
-   
-
-   
+      tenantlabels: "{{hostvars['localhost'].multitenant}}"

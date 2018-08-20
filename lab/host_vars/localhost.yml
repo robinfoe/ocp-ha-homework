@@ -36,7 +36,7 @@ multitenant:
  nodes:
   - node: 
      name: node1.{{guid}}.internal
-     label: aplha
+     label: alpha
   - node: 
      name: node2.{{guid}}.internal
      label: beta
