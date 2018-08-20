@@ -34,12 +34,12 @@
   when:
   - params|trim != ''
 
-- name: "Fail if params file doesn't exist (if applicable)"
-  fail:
-    msg: "{{ params }} - params file doesn't exist."
-  when:
-  - params|trim != ''
-  - params_result.stat.exists == False
+#- name: "Fail if params file doesn't exist (if applicable)"
+#  fail:
+#    msg: "{{ params }} - params file doesn't exist."
+#  when:
+#  - params|trim != ''
+#  - params_result.stat.exists == False
 
 - name: "Determine location for the 'file' (if applicable)"
   vars:

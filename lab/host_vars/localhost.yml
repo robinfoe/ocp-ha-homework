@@ -1,9 +1,9 @@
 ---
-sed_guid: guid
+sed_guid: 65de
 guid: '{{sed_guid}}'
 ocp_template_dir: "{{ playbook_dir }}/ocp_template"
 app_test_url: http://nodejs-mongo-persistent-smoke-test.apps.{{guid}}.example.opentlc.com
-
+ 
 
 ######### HOST JINJA PARAMETERS ##############################
 host_jinja:
@@ -94,7 +94,8 @@ applier:
    - object: PersistentVolume
      content:
       - name: PV creations for user
-        file: "{{ playbook_dir }}/ocp_template/pvs/"
+        file: "{{playbook_dir}}/ocp_template/pvs/"
+        #params: "{{ playbook_dir }}/ocp_template/param/dump"
 
   smoketest:
    - object: projectRequest

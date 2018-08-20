@@ -1,17 +1,22 @@
 ---
+- name: Backup current host file
+  copy: 
+    src: /etc/ansible/hosts
+    dest: ./original.hosts.backup
+    
+- name: Copy OpenShift hosts config
+  template: src=ocphostconfig.j2 dest=/etc/ansible/hosts
+
+- name: refresh
+  meta: refresh_inventory
+
 - name: required packages are present
   yum: name={{ item }} state=present
   with_items:
     - atomic-openshift-utils
     - atomic-openshift-clients
         
-- name: Backup current host file
-  copy: 
-    src: /etc/ansible/hosts
-    dest: ./original.hosts.backup
 
-- name: Copy OpenShift hosts config
-  template: src=ocphostconfig.j2 dest=/etc/ansible/hosts
 
-- name: refresh
-  meta: refresh_inventory
+
+

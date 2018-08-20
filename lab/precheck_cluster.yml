@@ -1,4 +1,12 @@
 ---
+- name: Bastion Task
+  hosts: localhost
+  become: yes
+  roles:
+   - role: bastion
+     vars:
+      param: '{{host_jinja}}'
+
 - name: Prepare GUID environment variable across all hosts
   hosts: all
   tasks:
@@ -6,7 +14,7 @@
       shell: export GUID=`hostname | cut -d"." -f2`; echo "export GUID=$GUID" >> $HOME/.bashrc
 
 - name: Prepare config check on Master, Infra and Worker
-  hosts: infra:master:node
+  hosts: nodes
   tasks: 
    - name: Make sure Docker is running 
      systemd: state=started name=docker enabled=yes
@@ -20,10 +28,4 @@
      become: yes
      failed_when:  not (efsout.stdout.find('/srv/nfs') != -1)
 
-- name: Bastion Task
-  hosts: localhost
-  become: yes
-  roles:
-   - role: bastion
-     vars:
-      param: '{{host_jinja}}'
+
