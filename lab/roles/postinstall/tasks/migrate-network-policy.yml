@@ -1,0 +1,8 @@
+---
+- name: make sure you are system:dmin
+  shell: oc whoami | grep system:admin
+  when: inventory_hostname_short == "localhost"
+
+- name: Set Network Policy
+  script: migrate-network-policy.sh
+  when: inventory_hostname_short == "localhost"

@@ -1,0 +1,6 @@
+---
+- name: Execute the precheck-cluster
+  import_playbook: precheck_cluster.yml
+ 
+- name:  Execute the provision cluster
+  import_playbook: provision_cluster.yml

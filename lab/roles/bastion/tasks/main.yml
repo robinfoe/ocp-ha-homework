@@ -10,18 +10,8 @@
     src: /etc/ansible/hosts
     dest: ./original.hosts.backup
 
-- name: Copy OpenShift install config
+- name: Copy OpenShift hosts config
   template: src=ocphostconfig.j2 dest=/etc/ansible/hosts
 
-# - name: Preparing Host files with Jinja
-#   tasks:
-#     - name: required packages are present
-#       yum:
-#         name:
-#           - install atomic-openshift-utils
-#           - atomic-openshift-clients
-#         state: present
-
-
-
-
+- name: refresh
+  meta: refresh_inventory

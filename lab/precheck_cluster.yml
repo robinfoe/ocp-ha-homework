@@ -24,10 +24,6 @@
   hosts: localhost
   become: yes
   roles:
-   - bastion
-  
-### TO BE IGNORED 
-# - name: run preinstall checklist
-#   hosts: all
-#   roles:
-#    - preinstall
+   - role: bastion
+     vars:
+      param: '{{host_jinja}}'

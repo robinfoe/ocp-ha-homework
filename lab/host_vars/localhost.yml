@@ -1,7 +1,34 @@
 ---
-guid: 65de
+sed_guid: guid
+guid: '{{sed_guid}}'
 ocp_template_dir: "{{ playbook_dir }}/ocp_template"
-app_test_url: http://nodejs-mongo-persistent-smoke-test.apps.65de.example.opentlc.com
+app_test_url: http://nodejs-mongo-persistent-smoke-test.apps.{{guid}}.example.opentlc.com
+
+
+######### HOST JINJA PARAMETERS ##############################
+host_jinja:
+ cluster:
+  guid: "{{guid}}"
+  public_dns_suffix: example.opentlc.com
+  private_dns_suffix: internal
+  public_hostname: loadbalancer1
+  app_hostname: apps
+ node:
+  masters:
+    - hostname: master1
+    - hostname: master2
+    - hostname: master3
+  infra:
+    - hostname: infranode1
+    - hostname: infranode2
+  workernode:
+    - hostname: node1
+    - hostname: node2
+    - hostname: node3
+    - hostname: node4
+  storage: support1
+  loadbalancer: loadbalancer1
+
 
 ########## MULTITENANCY #######################
 
@@ -47,7 +74,7 @@ users:
 
 ## PV TEMPLATE GENERATION ##################
 pv_template:
-  nfs_node: support1.65de.internal
+  nfs_node: support1.{{guid}}.internal
   rwo:
     from: 1
     to: 25
@@ -114,7 +141,7 @@ applier:
       - name: "deploy build pipeline to dev"
         template: "{{ playbook_dir }}/ocp_template/app_pipeline/template/build.yml"
         params: "{{ playbook_dir }}/ocp_template/app_pipeline/param/build-dev"
-
+## May not need proj_template
   proj_template:
    - object: projectTemplate
      content:

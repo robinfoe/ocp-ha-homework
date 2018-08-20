@@ -1,0 +1,37 @@
+---
+- name: create pvs
+  script: pv-create.sh
+  when: "'nfs' in group_names"
+
+- name: issue NFS restart
+  systemd:
+   state: restarted
+   name: nfs-server
+  when: "'nfs' in group_names"
+
+
+
+- name: create 1 to 25 RWO
+  script: pv-create-yaml.sh {{ params.pv_template.nfs_node }} {{ params.ocp_template_dir }} {{ params.pv_template.rwo.from }} {{ params.pv_template.rwo.to }} {{ params.pv_template.rwo.size }} {{ params.pv_template.rwo.mode }}
+  when: inventory_hostname_short == "localhost"
+
+- name: create 26 to 50 RWX
+  script: pv-create-yaml.sh {{ params.pv_template.nfs_node }} {{ params.ocp_template_dir }} {{ params.pv_template.rwx.from }} {{ params.pv_template.rwx.to }} {{ params.pv_template.rwx.size }} {{ params.pv_template.rwx.mode }}
+  when: inventory_hostname_short == "localhost"
+
+
+- name: Apply new project template
+  import_role:
+    name: openshift-applier
+  vars:
+    openshift_cluster_content: "{{params.applier.volumes}}"
+  when: "inventory_hostname == 'localhost'" 
+
+
+- name: Fix Recycler
+  shell: docker pull registry.access.redhat.com/openshift3/ose-recycler:latest
+  when: "'nodes' in group_names"
+
+- name: Fix Recycler
+  shell: docker tag registry.access.redhat.com/openshift3/ose-recycler:latest registry.access.redhat.com/openshift3/ose-recycler:v3.9.30
+  when: "'nodes' in group_names"

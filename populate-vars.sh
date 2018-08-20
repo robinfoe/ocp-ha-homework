@@ -4,7 +4,11 @@ groups=(infra loadbalancer master node support)
 
 
 GUID=`hostname | cut -d"." -f2`
-host_path="lab/hosts"
+mkdir -p lab/backup/
+host_path="lab/hosts_generated"
+ansible_host_path="/etc/ansible/hosts"
+
+
 nodes=( $(ansible all --list-hosts) ) 
 processed=${nodes[@]:2}
 
@@ -42,3 +46,7 @@ do
  echo "${i}" >> $host_path
   #echo "nodes : ${i}"
 done
+
+
+
+
