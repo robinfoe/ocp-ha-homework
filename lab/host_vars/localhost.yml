@@ -1,5 +1,5 @@
 ---
-sed_guid: 65de
+sed_guid: f3d8
 guid: '{{sed_guid}}'
 ocp_template_dir: "{{ playbook_dir }}/ocp_template"
 app_test_url: http://nodejs-mongo-persistent-smoke-test.apps.{{guid}}.example.opentlc.com
@@ -109,6 +109,7 @@ applier:
       - name: smoked-nodejs
         template: "{{ playbook_dir }}/ocp_template/smoketest/template/app-template.yml"
         params: "{{ playbook_dir }}/ocp_template/smoketest/param/smoke-param"
+        namepace: smoke-test
      #post-steps:
      # - role: /home/rfoe-redhat.com/ocp-ha-homework/lab/roles/smoked/tasks/main.yml
 

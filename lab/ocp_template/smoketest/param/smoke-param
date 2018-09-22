@@ -1,12 +1,12 @@
 NAME=nodejs-mongo-persistent
-NAMESPACE=openshift
+NAMESPACE=smoke-test
 MEMORY_LIMIT=512Mi
 MEMORY_MONGODB_LIMIT=512Mi
 VOLUME_CAPACITY=1Gi
 SOURCE_REPOSITORY_URL=https://github.com/openshift/nodejs-ex.git
 DATABASE_SERVICE_NAME=mongodb
 DATABASE_NAME=sampledb
-APPLICATION_DOMAIN=nodejs-mongo-persistent-smoke-test.apps.65de.example.opentlc.com
+APPLICATION_DOMAIN=nodejs-mongo-persistent-smoke-test.apps.f3d8.example.opentlc.com
 GITHUB_WEBHOOK_SECRET=raFFvvRx4BnCckrrjpkVfg7hD3L54Aib54Hsju0j
 GENERIC_WEBHOOK_SECRET=Yb43juaboRcB2NtrSUCr1BhbWLi0GKjlRx1DyjtL
 DATABASE_USER=geronimo

@@ -6,7 +6,7 @@
    timeout: 300
   register: amiup
   until: "200 == amiup.status" 
-  retries: 30
+  retries: 50
   delay: 5
 
 - name: deprovision project
